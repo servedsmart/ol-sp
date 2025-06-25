@@ -12,8 +12,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <!-- ol-simple-point.min.css -->
-    <link rel="stylesheet" href="src/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Using OpenLayers with Vite</title>
     <style>
@@ -61,7 +59,10 @@
       data-max-zoom="20"
       data-marker-x="-74.044512"
       data-marker-y="40.689272"
-      data-marker-popup="The Statue of Liberty"></script>
+      data-marker-popup="The Statue of Liberty"
+      data-stylesheet="style.css"
+      data-stylesheet-hash=""></script>
+      <!-- style.css would be: ol-simple-point.min.css -->
 
     <!-- ol-simple-point.min.esm.js: type="module" is required -->
     <script defer type="module" src="src/main.js"></script>

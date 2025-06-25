@@ -30,6 +30,9 @@ const maxZoom = parseInt(script?.getAttribute("data-max-zoom"));
 const pointX = parseFloat(script?.getAttribute("data-marker-x"));
 const pointY = parseFloat(script?.getAttribute("data-marker-y"));
 
+const stylesheet = script?.getAttribute("data-stylesheet");
+const stylesheetHash = script?.getAttribute("data-stylesheet-hash");
+
 window.olSimplePointConfig = {
   mapId: mapId,
   iconId: iconId,
@@ -46,4 +49,6 @@ window.olSimplePointConfig = {
   maxZoom: maxZoom,
   pointX: pointX,
   pointY: pointY,
+  stylesheet: stylesheet,
+  stylesheetHash: stylesheetHash,
 };

@@ -41,6 +41,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const pointX = config.pointX;
   const pointY = config.pointY;
 
+  const stylesheet = config.stylesheet;
+  const stylesheetHash = config.stylesheetHash;
+  if (stylesheet) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = stylesheet;
+    stylesheetHash && (link.integrity = stylesheetHash);
+    document.head.appendChild(link);
+  }
+
   // Initialize TileLayer that gets tiles from tileBaseURL
   const customAttribution =
     extraCopyrightURL && extraCopyrightName
