@@ -1,0 +1,69 @@
+<!--
+--File: index.html
+--Author: Leopold Meinel (leo@meinel.dev)
+-------
+--Copyright (c) 2025 Leopold Meinel & contributors
+--SPDX ID: MIT
+--URL: https://opensource.org/licenses/MIT
+-------
+ -->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <!-- ol-simple-point.min.css -->
+    <link rel="stylesheet" href="src/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Using OpenLayers with Vite</title>
+    <style>
+      .map-container {
+        position: relative;
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Class name ol-map is required -->
+    <div class="map-container">
+      <div id="ol-map-0" class="ol-map"></div>
+    </div>
+
+    <!-- location-dot.svg: Class name ol-icon is required -->
+    <img
+      id="ol-icon-0"
+      class="ol-icon"
+      src="src/assets/icons/location-dot.svg"
+      draggable="false"
+      alt="The Statue of Liberty">
+
+    <!-- Class name ol-popup is required -->
+    <div id="ol-popup-0" class="ol-popup">The Statue of Liberty</div>
+
+    <!-- config.js: data-* attributes are required -->
+    <script
+      defer
+      src="src/config.js"
+      data-map-id="ol-map-0"
+      data-icon-id="ol-icon-0"
+      data-popup-id="ol-popup-0"
+      data-copyright-url="https://example.com/copyright"
+      data-copyright-name="Example"
+      data-tile-base-url="https://tile.openstreetmap.org"
+      data-map-height="100%"
+      data-map-width="100%"
+      data-map-center-x="-74.045301"
+      data-map-center-y="40.690136"
+      data-default-zoom="15"
+      data-min-zoom="5"
+      data-max-zoom="20"
+      data-marker-x="-74.044512"
+      data-marker-y="40.689272"
+      data-marker-popup="The Statue of Liberty"></script>
+
+    <!-- ol-simple-point.min.esm.js: type="module" is required -->
+    <script defer type="module" src="src/main.js"></script>
+  </body>
+</html>

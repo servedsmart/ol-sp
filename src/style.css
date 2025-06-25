@@ -1,0 +1,35 @@
+/*
+ * File: style.css
+ * Author: Leopold Meinel (leo@meinel.dev)
+ * -----
+ * Copyright (c) 2025 Leopold Meinel & contributors
+ * SPDX ID: MIT
+ * URL: https://opensource.org/licenses/MIT
+ * -----
+ */
+
+@import "../node_modules/ol/ol.css";
+
+.ol-icon {
+  user-select: none;
+  background: transparent;
+  height: calc(0.25rem * 24);
+  width: calc(0.25rem * 24);
+  cursor: pointer;
+  filter: invert(81%) sepia(43%) saturate(5989%) hue-rotate(360deg)
+    brightness(102%) contrast(103%);
+}
+
+.ol-icon:hover {
+  transform: scale(1.2);
+  transition: transform 0.2s ease;
+}
+
+.ol-popup {
+  user-select: none;
+  border-radius: 0.75rem;
+  padding: calc(0.25rem * 4);
+  background: white;
+  color: black;
+  font-weight: 600;
+}
