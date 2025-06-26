@@ -17,33 +17,33 @@ import TileLayer from "ol/layer/Tile.js";
 import { fromLonLat } from "ol/proj";
 import OSM, { ATTRIBUTION } from "ol/source/OSM.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const config = window.olSimplePointConfig;
+window.olSimplePoint = (config) => {
+  const {
+    mapId,
+    iconId,
+    popupId,
 
-  const mapId = config.mapId;
-  const iconId = config.iconId;
-  const popupId = config.popupId;
+    stylesheet,
+    stylesheetHash,
 
-  const stylesheet = config.stylesheet;
-  const stylesheetHash = config.stylesheetHash;
+    extraCopyrightURL,
+    extraCopyrightName,
 
-  const extraCopyrightURL = config.extraCopyrightURL;
-  const extraCopyrightName = config.extraCopyrightName;
+    tileBaseURL,
 
-  const tileBaseURL = config.tileBaseURL;
+    mapIsSquare,
+    mapHeight,
+    mapWidth,
 
-  const mapIsSquare = config.mapIsSquare;
-  const mapHeight = config.mapHeight;
-  const mapWidth = config.mapWidth;
+    centerX,
+    centerY,
+    zoom,
+    minZoom,
+    maxZoom,
 
-  const centerX = config.centerX;
-  const centerY = config.centerY;
-  const zoom = config.zoom;
-  const minZoom = config.minZoom;
-  const maxZoom = config.maxZoom;
-
-  const pointX = config.pointX;
-  const pointY = config.pointY;
+    pointX,
+    pointY,
+  } = config;
 
   const documentStylesheets = Array.from(document.querySelectorAll("link")).map((href) => href.href);
   if (
@@ -132,4 +132,4 @@ document.addEventListener("DOMContentLoaded", () => {
   // Close popupOverlay on movestart and click
   map.on("movestart", () => popupOverlay.setPosition(undefined));
   map.on("click", () => popupOverlay.setPosition(undefined));
-});
+};
