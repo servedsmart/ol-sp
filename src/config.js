@@ -13,22 +13,22 @@ const mapId = script?.getAttribute("data-map-id");
 const iconId = script?.getAttribute("data-icon-id");
 const popupId = script?.getAttribute("data-popup-id");
 
-const extraCopyrightURL = script?.getAttribute("data-copyright-url");
-const extraCopyrightName = script?.getAttribute("data-copyright-name");
+const extraCopyrightURL = script?.getAttribute("data-extra-copyright-url");
+const extraCopyrightName = script?.getAttribute("data-extra-copyright-name");
 
 const tileBaseURL = script?.getAttribute("data-tile-base-url");
 
 const mapHeight = script?.getAttribute("data-map-height");
 const mapWidth = script?.getAttribute("data-map-width");
 
-const centerX = parseFloat(script?.getAttribute("data-map-center-x"));
-const centerY = parseFloat(script?.getAttribute("data-map-center-y"));
-const zoom = parseInt(script?.getAttribute("data-default-zoom"));
+const centerX = parseFloat(script?.getAttribute("data-center-x"));
+const centerY = parseFloat(script?.getAttribute("data-center-y"));
+const zoom = parseInt(script?.getAttribute("data-zoom"));
 const minZoom = parseInt(script?.getAttribute("data-min-zoom"));
 const maxZoom = parseInt(script?.getAttribute("data-max-zoom"));
 
-const pointX = parseFloat(script?.getAttribute("data-marker-x"));
-const pointY = parseFloat(script?.getAttribute("data-marker-y"));
+const pointX = parseFloat(script?.getAttribute("data-point-x"));
+const pointY = parseFloat(script?.getAttribute("data-point-y"));
 
 const stylesheet = script?.getAttribute("data-stylesheet");
 const stylesheetHash = script?.getAttribute("data-stylesheet-hash");
