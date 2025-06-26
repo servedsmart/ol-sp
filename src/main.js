@@ -96,23 +96,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const iconElement = document.getElementById(iconId);
   const iconOverlay = new Overlay({
     element: iconElement,
-    positioning: "center-center",
+    positioning: "bottom-center",
     position: fromLonLat([pointX, pointY]),
     stopEvent: false,
   });
   map.addOverlay(iconOverlay);
 
   // Initialize popupOverlay and add to map
-
+  const popupOffsetY = parseInt(parseInt(window.getComputedStyle(iconElement).height) * -1.2);
   const popupElement = document.getElementById(popupId);
-
   if (popupElement.innerHTML === "") {
     return;
   }
   const popupOverlay = new Overlay({
     element: popupElement,
     positioning: "bottom-center",
-    offset: [0, -60],
+    offset: [0, popupOffsetY],
     stopEvent: false,
   });
   map.addOverlay(popupOverlay);
