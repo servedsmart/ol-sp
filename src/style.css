@@ -10,6 +10,11 @@
 
 @import "../node_modules/ol/ol.css";
 
+.ol-map {
+  max-height: 100vh;
+  max-width: 100vw;
+}
+
 .ol-icon {
   user-select: none;
   height: 64px;

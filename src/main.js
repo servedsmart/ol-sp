@@ -74,9 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Set styling for mapElement and initialize map
   const mapElement = document.getElementById(mapId);
-  mapElement.style.maxHeight = "100vh";
   mapElement.style.height = mapHeight;
-  mapElement.style.maxWidth = "80vw";
   mapElement.style.width = mapWidth;
   const map = new Map({
     layers: [osmMapLayer],
