@@ -1,0 +1,45 @@
+name: Deploy to npm
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write
+
+    environment: npm-access
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependency - node
+        uses: "actions/setup-node@v4"
+        with:
+          node_version: 20
+
+      - name: Install dependencies with npm
+        run: npm ci
+
+      - name: Build npm package
+        run: npm run-script build
+
+      - name: Deploy to npm registry
+        uses: "JS-Devtools/npm-publish@v3"
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          access: public
+          provenance: true
+          registry: https://registry.npmjs.org/
+
+      - name: Deploy to github registry
+        uses: "JS-Devtools/npm-publish@v3"
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          access: public
+          provenance: true
+          registry: https://npm.pkg.github.com
