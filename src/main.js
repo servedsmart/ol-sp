@@ -43,7 +43,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const stylesheet = config.stylesheet;
   const stylesheetHash = config.stylesheetHash;
-  if (stylesheet) {
+  const documentStylesheets = Array.from(document.querySelectorAll("link")).map((href) => href.href);
+  if (
+    stylesheet &&
+    !documentStylesheets.includes(stylesheet) &&
+    !documentStylesheets.includes(window.location.origin + stylesheet) &&
+    !documentStylesheets.includes(window.location.origin + "/" + stylesheet)
+  ) {
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = stylesheet;
