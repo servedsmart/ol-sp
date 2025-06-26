@@ -41,6 +41,5 @@ jobs:
         uses: "JS-Devtools/npm-publish@v3"
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          access: public
           provenance: true
           registry: https://npm.pkg.github.com
