@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       contents: read
+      packages: write
       id-token: write
 
     environment: npm-access
@@ -20,7 +21,7 @@ jobs:
       - name: Install dependency - node
         uses: "actions/setup-node@v4"
         with:
-          node_version: 20
+          node-version: 20
 
       - name: Install dependencies with npm
         run: npm ci
