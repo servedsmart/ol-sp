@@ -14,8 +14,69 @@ import Map from "ol/Map.js";
 import Overlay from "ol/Overlay.js";
 import View from "ol/View.js";
 import TileLayer from "ol/layer/Tile.js";
-import { fromLonLat } from "ol/proj";
+import { fromLonLat, get } from "ol/proj";
 import OSM, { ATTRIBUTION } from "ol/source/OSM.js";
+import { normalizeModuleId } from "vite/module-runner";
+
+// Wait for readyState
+function waitForReadyState(function_) {
+  if (["interactive", "complete"].includes(document.readyState)) {
+    function_();
+  } else {
+    window.addEventListener("DOMContentLoaded", function handler() {
+      function_();
+      document.removeEventListener("DOMContentLoaded", handler);
+    });
+  }
+}
+
+// Load stylesheet
+function loadStylesheet(stylesheet, stylesheetHash) {
+  const documentStylesheets = Array.from(document.querySelectorAll("link")).map((href) => href.href);
+  if (
+    stylesheet &&
+    !documentStylesheets.includes(stylesheet) &&
+    !documentStylesheets.includes(window.location.origin + stylesheet) &&
+    !documentStylesheets.includes(window.location.origin + "/" + stylesheet)
+  ) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = stylesheet;
+    stylesheetHash && (link.integrity = stylesheetHash);
+    document.head.appendChild(link);
+  }
+}
+
+// Initialize TileLayer that gets tiles from tileBaseURL
+function getTilelayer(attributions, url) {
+  return new TileLayer({
+    source: new OSM({
+      attributions,
+      url,
+      crossOrigin: "",
+    }),
+  });
+}
+
+// Get icon overlay
+function getIconOverlay(element, position) {
+  return new Overlay({
+    element,
+    positioning: "bottom-center",
+    position,
+    stopEvent: false,
+  });
+}
+
+// Initialize popup overlay
+function getPopupOverlay(element, offset) {
+  return new Overlay({
+    element,
+    positioning: "bottom-center",
+    offset,
+    stopEvent: false,
+  });
+}
 
 window.olSimplePoint = (config) => {
   const {
@@ -44,91 +105,66 @@ window.olSimplePoint = (config) => {
     pointX,
     pointY,
   } = config;
+  waitForReadyState(() => {
+    // Load stylesheet
+    loadStylesheet(stylesheet, stylesheetHash);
 
-  const documentStylesheets = Array.from(document.querySelectorAll("link")).map((href) => href.href);
-  if (
-    stylesheet &&
-    !documentStylesheets.includes(stylesheet) &&
-    !documentStylesheets.includes(window.location.origin + stylesheet) &&
-    !documentStylesheets.includes(window.location.origin + "/" + stylesheet)
-  ) {
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = stylesheet;
-    stylesheetHash && (link.integrity = stylesheetHash);
-    document.head.appendChild(link);
-  }
+    // Initialize tileLayer
+    const customAttribution =
+      extraCopyrightURL && extraCopyrightName
+        ? "&#169; " +
+          `<a href="${extraCopyrightURL}" target="_blank">${extraCopyrightName}</a> ` +
+          "contributors."
+        : "";
+    const tileLayer = getTilelayer([customAttribution + ATTRIBUTION], `${tileBaseURL}/{z}/{x}/{y}.png`);
 
-  // Initialize TileLayer that gets tiles from tileBaseURL
-  const customAttribution =
-    extraCopyrightURL && extraCopyrightName
-      ? "&#169; " +
-        `<a href="${extraCopyrightURL}" target="_blank">${extraCopyrightName}</a> ` +
-        "contributors."
-      : "";
-  const osmMapLayer = new TileLayer({
-    source: new OSM({
-      attributions: [customAttribution + ATTRIBUTION],
-      url: `${tileBaseURL}/{z}/{x}/{y}.png`,
-      crossOrigin: "",
-    }),
-  });
-
-  // Set styling for mapElement and initialize map
-  const mapElement = document.getElementById(mapId);
-  if (widthEqHeight) {
+    // Style mapElement
+    const mapElement = document.getElementById(mapId);
     mapElement.style.height = height;
-    mapElement.style.width = window.getComputedStyle(mapElement).height;
-  } else {
-    mapElement.style.height = height;
-    mapElement.style.width = width;
-  }
-  const map = new Map({
-    layers: [osmMapLayer],
-    target: mapElement,
-    view: new View({
+    mapElement.style.width = widthEqHeight ? `${mapElement.offsetHeight}px` : width;
+
+    // Initialize map
+    const view = new View({
       center: fromLonLat([centerX, centerY]),
-      zoom: zoom,
-      minZoom: minZoom,
-      maxZoom: maxZoom,
-    }),
-  });
+      zoom,
+      minZoom,
+      maxZoom,
+    });
+    const map = new Map({
+      layers: [tileLayer],
+      target: mapElement,
+      view,
+    });
 
-  // Initialize iconOverlay and add to map
-  if (!pointX || !pointY) {
-    return;
-  }
-  const iconElement = document.getElementById(iconId);
-  const iconOverlay = new Overlay({
-    element: iconElement,
-    positioning: "bottom-center",
-    position: fromLonLat([pointX, pointY]),
-    stopEvent: false,
-  });
-  map.addOverlay(iconOverlay);
+    // If no points, return
+    if (!pointX || !pointY) {
+      return;
+    }
+    // Initialize iconOverlay and add to map
+    const iconElement = document.getElementById(iconId);
+    const iconOverlay = getIconOverlay(iconElement, fromLonLat([pointX, pointY]));
+    map.addOverlay(iconOverlay);
 
-  // Initialize popupOverlay and add to map
-  const popupOffsetY = parseInt(parseInt(window.getComputedStyle(iconElement).height) * -1.2);
-  const popupElement = document.getElementById(popupId);
-  if (popupElement.innerHTML === "") {
-    return;
-  }
-  const popupOverlay = new Overlay({
-    element: popupElement,
-    positioning: "bottom-center",
-    offset: [0, popupOffsetY],
-    stopEvent: false,
-  });
-  map.addOverlay(popupOverlay);
-  popupOverlay.setPosition(undefined);
+    // If no popupElement, return
+    const popupElement = document.getElementById(popupId);
+    if (!popupElement.innerHTML.trim()) {
+      return;
+    }
+    // Use requestAnimationFrame() to ensure iconElement has been rendered
+    requestAnimationFrame(() => {
+      // Initialize popupOverlay and add to map
+      const popupOffsetY = -1.2 * iconElement.offsetHeight;
+      const popupOverlay = getPopupOverlay(popupElement, [0, popupOffsetY]);
+      popupOverlay.setPosition(undefined);
+      map.addOverlay(popupOverlay);
 
-  // Display popupOverlay on click
-  iconElement.addEventListener("click", (event) => {
-    event.stopPropagation();
-    popupOverlay.setPosition(iconOverlay.getPosition());
+      // Add event listeners
+      iconElement.addEventListener("click", (event) => {
+        event.stopPropagation();
+        popupOverlay.setPosition(iconOverlay.getPosition());
+      });
+      map.on("movestart", () => popupOverlay.setPosition(undefined));
+      map.on("click", () => popupOverlay.setPosition(undefined));
+    });
   });
-
-  // Close popupOverlay on movestart and click
-  map.on("movestart", () => popupOverlay.setPosition(undefined));
-  map.on("click", () => popupOverlay.setPosition(undefined));
 };
