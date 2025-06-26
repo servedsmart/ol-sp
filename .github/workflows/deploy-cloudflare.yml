@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       contents: read
-      packages: write
       id-token: write
 
     environment: npm-access
@@ -36,9 +35,3 @@ jobs:
           access: public
           provenance: true
           registry: https://registry.npmjs.org/
-
-      - name: Deploy to github registry
-        uses: "JS-Devtools/npm-publish@v3"
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          registry: https://npm.pkg.github.com
