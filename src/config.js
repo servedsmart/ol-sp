@@ -24,9 +24,9 @@
 
     tileBaseURL: script?.getAttribute("data-tile-base-url"),
 
-    mapIsSquare: script?.getAttribute("data-map-is-square") === "true",
-    mapHeight: script?.getAttribute("data-map-height"),
-    mapWidth: script?.getAttribute("data-map-width"),
+    widthEqHeight: script?.getAttribute("data-width-eq-height") === "true",
+    height: script?.getAttribute("data-height"),
+    width: script?.getAttribute("data-width"),
 
     centerX: parseFloat(script?.getAttribute("data-center-x")),
     centerY: parseFloat(script?.getAttribute("data-center-y")),

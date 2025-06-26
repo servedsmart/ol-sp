@@ -31,9 +31,9 @@ window.olSimplePoint = (config) => {
 
     tileBaseURL,
 
-    mapIsSquare,
-    mapHeight,
-    mapWidth,
+    widthEqHeight,
+    height,
+    width,
 
     centerX,
     centerY,
@@ -76,13 +76,12 @@ window.olSimplePoint = (config) => {
 
   // Set styling for mapElement and initialize map
   const mapElement = document.getElementById(mapId);
-  if (mapIsSquare) {
-    const length = Math.max(mapHeight, mapWidth);
-    mapElement.style.height = length;
-    mapElement.style.width = length;
+  if (widthEqHeight) {
+    mapElement.style.height = height;
+    mapElement.style.width = window.getComputedStyle(mapElement).height;
   } else {
-    mapElement.style.height = mapHeight;
-    mapElement.style.width = mapWidth;
+    mapElement.style.height = height;
+    mapElement.style.width = width;
   }
   const map = new Map({
     layers: [osmMapLayer],
