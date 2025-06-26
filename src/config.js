@@ -9,15 +9,20 @@
  */
 
 const script = document.currentScript;
+
 const mapId = script?.getAttribute("data-map-id");
 const iconId = script?.getAttribute("data-icon-id");
 const popupId = script?.getAttribute("data-popup-id");
+
+const stylesheet = script?.getAttribute("data-stylesheet");
+const stylesheetHash = script?.getAttribute("data-stylesheet-hash");
 
 const extraCopyrightURL = script?.getAttribute("data-extra-copyright-url");
 const extraCopyrightName = script?.getAttribute("data-extra-copyright-name");
 
 const tileBaseURL = script?.getAttribute("data-tile-base-url");
 
+const mapIsSquare = script?.getAttribute("data-map-is-square") === "true";
 const mapHeight = script?.getAttribute("data-map-height");
 const mapWidth = script?.getAttribute("data-map-width");
 
@@ -30,16 +35,16 @@ const maxZoom = parseInt(script?.getAttribute("data-max-zoom"));
 const pointX = parseFloat(script?.getAttribute("data-point-x"));
 const pointY = parseFloat(script?.getAttribute("data-point-y"));
 
-const stylesheet = script?.getAttribute("data-stylesheet");
-const stylesheetHash = script?.getAttribute("data-stylesheet-hash");
-
 window.olSimplePointConfig = {
   mapId: mapId,
   iconId: iconId,
   popupId: popupId,
+  stylesheet: stylesheet,
+  stylesheetHash: stylesheetHash,
   extraCopyrightURL: extraCopyrightURL,
   extraCopyrightName: extraCopyrightName,
   tileBaseURL: tileBaseURL,
+  mapIsSquare: mapIsSquare,
   mapHeight: mapHeight,
   mapWidth: mapWidth,
   centerX: centerX,
@@ -49,6 +54,4 @@ window.olSimplePointConfig = {
   maxZoom: maxZoom,
   pointX: pointX,
   pointY: pointY,
-  stylesheet: stylesheet,
-  stylesheetHash: stylesheetHash,
 };

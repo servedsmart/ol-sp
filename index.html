@@ -39,21 +39,26 @@
       class="ol-icon"
       src="src/assets/icons/location-dot.svg"
       draggable="false"
-      alt="The Statue of Liberty">
+      alt="The Statue of Liberty"
+    >
 
     <!-- Class name ol-popup is required -->
     <div id="ol-popup-0" class="ol-popup">The Statue of Liberty</div>
 
     <!-- config.js: data-* attributes are required -->
+    <!-- style.css would be: ol-simple-point.min.css -->
     <script
       defer
       src="src/config.js"
       data-map-id="ol-map-0"
       data-icon-id="ol-icon-0"
       data-popup-id="ol-popup-0"
+      data-stylesheet="style.css"
+      data-stylesheet-hash=""
       data-extra-copyright-url="https://example.com/copyright"
       data-extra-copyright-name="Example"
       data-tile-base-url="https://tile.openstreetmap.org"
+      data-map-is-square="false"
       data-map-height="100%"
       data-map-width="100%"
       data-center-x="-74.045301"
@@ -63,9 +68,7 @@
       data-max-zoom="20"
       data-point-x="-74.044512"
       data-point-y="40.689272"
-      data-stylesheet="style.css"
-      data-stylesheet-hash=""></script>
-      <!-- style.css would be: ol-simple-point.min.css -->
+    ></script>
 
     <!-- ol-simple-point.min.esm.js: type="module" is required -->
     <script defer type="module" src="src/main.js"></script>

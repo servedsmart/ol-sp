@@ -24,11 +24,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const iconId = config.iconId;
   const popupId = config.popupId;
 
+  const stylesheet = config.stylesheet;
+  const stylesheetHash = config.stylesheetHash;
+
   const extraCopyrightURL = config.extraCopyrightURL;
   const extraCopyrightName = config.extraCopyrightName;
 
   const tileBaseURL = config.tileBaseURL;
 
+  const mapIsSquare = config.mapIsSquare;
   const mapHeight = config.mapHeight;
   const mapWidth = config.mapWidth;
 
@@ -41,8 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const pointX = config.pointX;
   const pointY = config.pointY;
 
-  const stylesheet = config.stylesheet;
-  const stylesheetHash = config.stylesheetHash;
   const documentStylesheets = Array.from(document.querySelectorAll("link")).map((href) => href.href);
   if (
     stylesheet &&
@@ -74,8 +76,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Set styling for mapElement and initialize map
   const mapElement = document.getElementById(mapId);
-  mapElement.style.height = mapHeight;
-  mapElement.style.width = mapWidth;
+  if (mapIsSquare) {
+    const length = Math.max(mapHeight, mapWidth);
+    mapElement.style.height = length;
+    mapElement.style.width = length;
+  } else {
+    mapElement.style.height = mapHeight;
+    mapElement.style.width = mapWidth;
+  }
   const map = new Map({
     layers: [osmMapLayer],
     target: mapElement,
