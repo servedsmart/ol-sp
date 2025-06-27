@@ -60,8 +60,8 @@ function getTilelayer(attributions, url) {
   return new TileLayer({
     source: new OSM({
       attributions,
-      url,
       crossOrigin: "",
+      url,
     }),
   });
 }
@@ -70,8 +70,8 @@ function getTilelayer(attributions, url) {
 function getIconOverlay(element, position) {
   return new Overlay({
     element,
-    positioning: "bottom-center",
     position,
+    positioning: "bottom-center",
     stopEvent: false,
   });
 }
@@ -80,8 +80,8 @@ function getIconOverlay(element, position) {
 function getPopupOverlay(element, offset) {
   return new Overlay({
     element,
-    positioning: "bottom-center",
     offset,
+    positioning: "bottom-center",
     stopEvent: false,
   });
 }
@@ -130,8 +130,10 @@ window.olSp = (config) => {
   // Initialize map
   const view = new View({
     center: fromLonLat([centerX, centerY]),
-    zoom,
+    maxZoom,
     minZoom,
+    zoom,
+  });
   const centerControl = new CenterControl({
     button: document.getElementById(centerControlButtonId),
     center: fromLonLat([centerX, centerY]),
