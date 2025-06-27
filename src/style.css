@@ -11,17 +11,18 @@
 @import "../node_modules/ol/ol.css";
 
 .ol-sp-map-container {
-    max-height: 100vh;
-    max-width: 100vw;
+  position: relative;
+  max-height: 60vh;
+  max-width: 100vw;
 }
 
 .ol-sp-map {
-  height: 100%;
-  width: 100%;
+  position: relative;
+  max-height: inherit;
+  max-width: inherit;
 }
 
 .ol-sp-icon {
-  display: hidden;
   user-select: none;
   cursor: pointer;
   filter: invert(81%) sepia(43%) saturate(5989%) hue-rotate(360deg)
@@ -33,7 +34,6 @@
 }
 
 .ol-sp-popup {
-  display: hidden;
   user-select: none;
   border-radius: 0.75rem;
   padding: calc(0.25rem * 4);

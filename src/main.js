@@ -75,7 +75,6 @@ window.olSp = (config) => {
     extraCopyrightURL,
     extraCopyrightName,
     tileBaseURL,
-    isSquare,
     height,
     width,
     centerX,
@@ -102,9 +101,8 @@ window.olSp = (config) => {
 
   // Initialize mapElement
   const mapElement = document.getElementById(mapId);
-  const length = Math.max(mapElement.offsetHeight, mapElement.offsetWidth)
-  mapElement.style.height = isSquare ? `${length}px` : height;
-  mapElement.style.width = isSquare ? `${length}px` : width;
+  mapElement.style.height = height ? height : width;
+  mapElement.style.width = width ? width : height;
 
   // Initialize map
   const view = new View({
@@ -124,9 +122,9 @@ window.olSp = (config) => {
   if (!iconElement) {
     return;
   }
-  iconElement.style.display = "block";
   iconElement.style.height = iconSize;
   iconElement.style.width = iconSize;
+  iconElement.style.display = "block";
 
   // Initialize iconOverlay and add to map
   const iconOverlay = getIconOverlay(iconElement, fromLonLat([pointX, pointY]));
