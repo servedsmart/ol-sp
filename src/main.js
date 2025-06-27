@@ -66,7 +66,21 @@ function getTilelayer(attributions, url) {
   });
 }
 
-// Get icon overlay
+function handleCenterControl(button, element, map, center) {
+  const centerControl = new CenterControl({
+    button,
+    center,
+    element,
+  });
+  map.addControl(centerControl);
+  // NOTE: This is necessary to ensure that a dynamic style applied via '.ol-touch .ol-control button'
+  //       is compatible with our CSS for ol-sp-center-control's top using em
+  map.on("postrender", () => {
+    const fontSize = window.getComputedStyle(button).fontSize;
+    button.style.fontSize = "inherit";
+    element.style.fontSize = fontSize;
+  });
+}
 function getIconOverlay(element, position) {
   return new Overlay({
     element,
@@ -141,23 +155,11 @@ window.olSp = (config) => {
     view,
   });
 
-  // Initialize centerControl
+  // Add CenterControl element
   const centerControlButtonElement = document.getElementById(centerControlButtonId);
   const centerControlElement = document.getElementById(centerControlId);
   if (centerControlButtonElement && centerControlElement) {
-    const centerControl = new CenterControl({
-      button: centerControlButtonElement,
-      center: fromLonLat([centerX, centerY]),
-      element: centerControlElement,
-    });
-    map.addControl(centerControl);
-    // NOTE: This is necessary to ensure that a dynamic style applied via '.ol-touch .ol-control button'
-    //       is compatible with our CSS for ol-sp-center-control's top using em
-    map.on("postrender", () => {
-      const fontSize = window.getComputedStyle(centerControlButtonElement).fontSize;
-      centerControlButtonElement.style.fontSize = "inherit";
-      centerControlElement.style.fontSize = fontSize;
-    });
+    handleCenterControl(centerControlButtonElement, centerControlElement, map, fromLonLat([centerX, centerY]));
   }
 
   // Initialize iconElement
