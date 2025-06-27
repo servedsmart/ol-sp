@@ -18,8 +18,15 @@ import Overlay from "ol/Overlay.js";
 import TileLayer from "ol/layer/Tile.js";
 import View from "ol/View.js";
 
-// Custom control to set center
+/**
+ * @classdesc
+ * A Control with a button to set a new center of the view.
+ */
 class CenterControl extends Control {
+  /**
+   *
+   * @param {*} options Control options. Takes target, center, element and button.
+   */
   constructor({ target, center, element, button } = {}) {
     super({
       element,
@@ -38,7 +45,11 @@ class CenterControl extends Control {
   }
 }
 
-// Load stylesheet
+/**
+ * Load a stylesheet and make sure it is not loaded twice.
+ * @param {*} stylesheet Href to the stylesheet to add.
+ * @param {*} stylesheetHash Integrity hash of the stylesheet.
+ */
 function loadStylesheet(stylesheet, stylesheetHash) {
   const documentStylesheets = Array.from(document.querySelectorAll("link")).map((href) => href.href);
   if (
@@ -55,7 +66,12 @@ function loadStylesheet(stylesheet, stylesheetHash) {
   }
 }
 
-// Initialize TileLayer that gets tiles from tileBaseURL
+/**
+ * Get a TileLayer with an OSM source.
+ * @param {*} attributions Attributions for the OSM source. Takes HTML code.
+ * @param {*} url URL to source the OSM from.
+ * @returns TileLayer with an OSM source.
+ */
 function getTilelayer(attributions, url) {
   return new TileLayer({
     source: new OSM({
@@ -66,6 +82,13 @@ function getTilelayer(attributions, url) {
   });
 }
 
+/**
+ * Add a CenterControl to the target map.
+ * @param {*} button Button element to use in CenterControl.
+ * @param {*} element Element to use in CenterControl.
+ * @param {*} map Target map.
+ * @param {*} center Center to use in CenterControl.
+ */
 function handleCenterControl(button, element, map, center) {
   const centerControl = new CenterControl({
     button,
@@ -81,6 +104,13 @@ function handleCenterControl(button, element, map, center) {
     element.style.fontSize = fontSize;
   });
 }
+
+/**
+ * Get Overlay with specific properties that are suitable for point icons.
+ * @param {*} element Element containing the icon.
+ * @param {*} position Position of the new Overlay.
+ * @returns Overlay with specific properties that are suitable for point icons.
+ */
 function getIconOverlay(element, position) {
   return new Overlay({
     element,
@@ -90,7 +120,12 @@ function getIconOverlay(element, position) {
   });
 }
 
-// Initialize popup overlay
+/**
+ * Get Overlay with specific properties that are suitable for popups.
+ * @param {*} element Element containing text for the popup.
+ * @param {*} offset Offset to move the Overlay.
+ * @returns Overlay with specific properties that are suitable for popups.
+ */
 function getPopupOverlay(element, offset) {
   return new Overlay({
     element,
