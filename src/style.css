@@ -22,6 +22,11 @@
   max-width: inherit;
 }
 
+.ol-sp-center-control {
+  top: 4.5em;
+  left: 0.5em;
+}
+
 .ol-sp-icon {
   user-select: none;
   cursor: pointer;
