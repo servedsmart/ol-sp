@@ -16,8 +16,8 @@ export default defineConfig({
       external: [...externalPaths],
       input: "src/main.js",
       output: {
-        entryFileNames: "ol-simple-point.min.esm.js",
-        assetFileNames: "ol-simple-point.min.css",
+        entryFileNames: "ol-sp.min.esm.js",
+        assetFileNames: "ol-sp.min.css",
         format: "es",
       },
     },

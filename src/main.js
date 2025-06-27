@@ -14,21 +14,8 @@ import Map from "ol/Map.js";
 import Overlay from "ol/Overlay.js";
 import View from "ol/View.js";
 import TileLayer from "ol/layer/Tile.js";
-import { fromLonLat, get } from "ol/proj";
+import { fromLonLat } from "ol/proj";
 import OSM, { ATTRIBUTION } from "ol/source/OSM.js";
-import { normalizeModuleId } from "vite/module-runner";
-
-// Wait for readyState
-function waitForReadyState(function_) {
-  if (["interactive", "complete"].includes(document.readyState)) {
-    function_();
-  } else {
-    window.addEventListener("DOMContentLoaded", function handler() {
-      function_();
-      document.removeEventListener("DOMContentLoaded", handler);
-    });
-  }
-}
 
 // Load stylesheet
 function loadStylesheet(stylesheet, stylesheetHash) {
@@ -78,93 +65,90 @@ function getPopupOverlay(element, offset) {
   });
 }
 
-window.olSimplePoint = (config) => {
+window.olSp = (config) => {
   const {
     mapId,
     iconId,
     popupId,
-
     stylesheet,
     stylesheetHash,
-
     extraCopyrightURL,
     extraCopyrightName,
-
     tileBaseURL,
-
     widthEqHeight,
     height,
     width,
-
     centerX,
     centerY,
     zoom,
     minZoom,
     maxZoom,
-
     pointX,
     pointY,
+    iconSize,
   } = config;
-  waitForReadyState(() => {
-    // Load stylesheet
-    loadStylesheet(stylesheet, stylesheetHash);
 
-    // Initialize tileLayer
-    const customAttribution =
-      extraCopyrightURL && extraCopyrightName
-        ? "&#169; " +
-          `<a href="${extraCopyrightURL}" target="_blank">${extraCopyrightName}</a> ` +
-          "contributors."
-        : "";
-    const tileLayer = getTilelayer([customAttribution + ATTRIBUTION], `${tileBaseURL}/{z}/{x}/{y}.png`);
+  // Load stylesheet
+  loadStylesheet(stylesheet, stylesheetHash);
 
-    // Style mapElement
-    const mapElement = document.getElementById(mapId);
-    mapElement.style.height = height;
-    mapElement.style.width = widthEqHeight ? `${mapElement.offsetHeight}px` : width;
+  // Initialize tileLayer
+  const customAttribution =
+    extraCopyrightURL && extraCopyrightName
+      ? "&#169; " +
+        `<a href="${extraCopyrightURL}" target="_blank">${extraCopyrightName}</a> ` +
+        "contributors."
+      : "";
+  const tileLayer = getTilelayer([customAttribution + ATTRIBUTION], `${tileBaseURL}/{z}/{x}/{y}.png`);
 
-    // Initialize map
-    const view = new View({
-      center: fromLonLat([centerX, centerY]),
-      zoom,
-      minZoom,
-      maxZoom,
-    });
-    const map = new Map({
-      layers: [tileLayer],
-      target: mapElement,
-      view,
-    });
+  // Initialize mapElement
+  const mapElement = document.getElementById(mapId);
+  mapElement.style.height = height;
+  mapElement.style.width = widthEqHeight ? `${mapElement.offsetHeight}px` : width;
 
-    // If no points, return
-    if (!pointX || !pointY) {
-      return;
-    }
-    // Initialize iconOverlay and add to map
-    const iconElement = document.getElementById(iconId);
-    const iconOverlay = getIconOverlay(iconElement, fromLonLat([pointX, pointY]));
-    map.addOverlay(iconOverlay);
-
-    // If no popupElement, return
-    const popupElement = document.getElementById(popupId);
-    if (!popupElement.innerHTML.trim()) {
-      return;
-    }
-    // Use requestAnimationFrame() to ensure iconElement has been rendered
-    requestAnimationFrame(() => {
-      // Initialize popupOverlay and add to map
-      const popupOffsetY = -1.2 * iconElement.offsetHeight;
-      const popupOverlay = getPopupOverlay(popupElement, [0, popupOffsetY]);
-      popupOverlay.setPosition(undefined);
-      map.addOverlay(popupOverlay);
-
-      // Add event listeners
-      iconElement.addEventListener("click", (event) => {
-        event.stopPropagation();
-        popupOverlay.setPosition(iconOverlay.getPosition());
-      });
-      map.on("movestart", () => popupOverlay.setPosition(undefined));
-      map.on("click", () => popupOverlay.setPosition(undefined));
-    });
+  // Initialize map
+  const view = new View({
+    center: fromLonLat([centerX, centerY]),
+    zoom,
+    minZoom,
+    maxZoom,
   });
+  const map = new Map({
+    layers: [tileLayer],
+    target: mapElement,
+    view,
+  });
+
+  // Initialize iconElement
+  const iconElement = document.getElementById(iconId);
+  if (!iconElement) {
+    return;
+  }
+  iconElement.style.display = "block";
+  iconElement.style.height = iconSize;
+  iconElement.style.width = iconSize;
+
+  // Initialize iconOverlay and add to map
+  const iconOverlay = getIconOverlay(iconElement, fromLonLat([pointX, pointY]));
+  map.addOverlay(iconOverlay);
+
+  // Initialize popupElement
+  const popupElement = document.getElementById(popupId);
+  if (!popupElement.innerHTML.trim()) {
+    return;
+  }
+  popupElement.style.display = "block";
+
+  // Initialize popupOverlay and add to map
+  const popupOffsetY = -1.2 * parseInt(iconSize);
+  const popupOverlay = getPopupOverlay(popupElement, [0, popupOffsetY]);
+  popupOverlay.setPosition(undefined);
+  map.addOverlay(popupOverlay);
+
+  // Add event listeners
+  iconElement.addEventListener("click", (event) => {
+    event.stopPropagation();
+    popupOverlay.setPosition(iconOverlay.getPosition());
+  });
+  map.on("movestart", () => popupOverlay.setPosition(undefined));
+  map.on("click", () => popupOverlay.setPosition(undefined));
 };

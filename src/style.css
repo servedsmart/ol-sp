@@ -10,25 +10,25 @@
 
 @import "../node_modules/ol/ol.css";
 
-.ol-map {
-  max-height: 100vh;
-  max-width: 100vw;
+.ol-sp-map {
+  height: 100%;
+  width: 100%;
 }
 
-.ol-icon {
+.ol-sp-icon {
+  display: hidden;
   user-select: none;
-  height: 64px;
-  width: 64px;
   cursor: pointer;
   filter: invert(81%) sepia(43%) saturate(5989%) hue-rotate(360deg)
     brightness(102%) contrast(103%);
 }
 
-.ol-icon:hover {
+.ol-sp-icon:hover {
   transform: scale(1.2);
 }
 
-.ol-popup {
+.ol-sp-popup {
+  display: hidden;
   user-select: none;
   border-radius: 0.75rem;
   padding: calc(0.25rem * 4);

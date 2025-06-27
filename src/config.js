@@ -36,7 +36,9 @@
 
     pointX: parseFloat(script?.getAttribute("data-point-x")),
     pointY: parseFloat(script?.getAttribute("data-point-y")),
+
+    iconSize: script?.getAttribute("data-icon-size"),
   };
 
-  window.olSimplePoint(config);
+  window.olSp(config);
 })();
