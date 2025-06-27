@@ -10,6 +10,11 @@
 
 @import "../node_modules/ol/ol.css";
 
+.ol-sp-map-container {
+    max-height: 100vh;
+    max-width: 100vw;
+}
+
 .ol-sp-map {
   height: 100%;
   width: 100%;

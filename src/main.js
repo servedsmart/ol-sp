@@ -75,7 +75,7 @@ window.olSp = (config) => {
     extraCopyrightURL,
     extraCopyrightName,
     tileBaseURL,
-    widthEqHeight,
+    isSquare,
     height,
     width,
     centerX,
@@ -102,8 +102,9 @@ window.olSp = (config) => {
 
   // Initialize mapElement
   const mapElement = document.getElementById(mapId);
-  mapElement.style.height = height;
-  mapElement.style.width = widthEqHeight ? `${mapElement.offsetHeight}px` : width;
+  const length = Math.max(mapElement.offsetHeight, mapElement.offsetWidth)
+  mapElement.style.height = isSquare ? `${length}px` : height;
+  mapElement.style.width = isSquare ? `${length}px` : width;
 
   // Initialize map
   const view = new View({
