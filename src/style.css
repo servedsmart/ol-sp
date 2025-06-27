@@ -23,8 +23,8 @@
 }
 
 .ol-sp-center-control {
-  top: 4.5em;
-  left: 0.5em;
+  top: calc(0.5rem * 2 + 1.375em * 2);
+  left: 0.5rem;
 }
 
 .ol-sp-icon {

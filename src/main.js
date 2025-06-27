@@ -10,7 +10,6 @@
 
 import "./style.css";
 
-import { defaults as defaultControls } from "ol/control/defaults.js";
 import { fromLonLat } from "ol/proj";
 import Control from "ol/control/Control";
 import Map from "ol/Map.js";
@@ -136,18 +135,30 @@ window.olSp = (config) => {
     minZoom,
     zoom,
   });
-  // FIXME: This should be optional
-  const centerControl = new CenterControl({
-    button: document.getElementById(centerControlButtonId),
-    center: fromLonLat([centerX, centerY]),
-    element: document.getElementById(centerControlId),
-  });
   const map = new Map({
-    controls: defaultControls().extend([centerControl]),
     layers: [tileLayer],
     target: mapElement,
     view,
   });
+
+  // Initialize centerControl
+  const centerControlButtonElement = document.getElementById(centerControlButtonId);
+  const centerControlElement = document.getElementById(centerControlId);
+  if (centerControlButtonElement && centerControlElement) {
+    const centerControl = new CenterControl({
+      button: centerControlButtonElement,
+      center: fromLonLat([centerX, centerY]),
+      element: centerControlElement,
+    });
+    map.addControl(centerControl);
+    // NOTE: This is necessary to ensure that a dynamic style applied via '.ol-touch .ol-control button'
+    //       is compatible with our CSS for ol-sp-center-control's top using em
+    map.on("postrender", () => {
+      const fontSize = window.getComputedStyle(centerControlButtonElement).fontSize;
+      centerControlButtonElement.style.fontSize = "inherit";
+      centerControlElement.style.fontSize = fontSize;
+    });
+  }
 
   // Initialize iconElement
   const iconElement = document.getElementById(iconId);
