@@ -87,6 +87,7 @@ function getPopupOverlay(element, offset) {
 }
 
 window.olSp = (config) => {
+  // FIXME: Make most of these optional
   const {
     mapId,
     centerControlId,
@@ -134,6 +135,7 @@ window.olSp = (config) => {
     minZoom,
     zoom,
   });
+  // FIXME: This should be optional
   const centerControl = new CenterControl({
     button: document.getElementById(centerControlButtonId),
     center: fromLonLat([centerX, centerY]),
