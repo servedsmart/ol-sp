@@ -25,7 +25,7 @@ import View from "ol/View.js";
 class CenterControl extends Control {
   /**
    *
-   * @param {*} options Control options. Takes target, center, element and button.
+   * @param {{ target: string | HTMLElement | undefined, center: Coordinate | undefined, element: HTMLElement | undefined, button: HTMLElement | undefined }} options Control options. Takes target, center, element and button.
    */
   constructor({ target, center, element, button } = {}) {
     super({
@@ -47,11 +47,12 @@ class CenterControl extends Control {
 
 /**
  * Load a stylesheet and make sure it is not loaded twice.
- * @param {*} stylesheet Href to the stylesheet to add.
- * @param {*} stylesheetHash Integrity hash of the stylesheet.
+ * @param {string} stylesheet href to the stylesheet to add.
+ * @param {string | undefined} stylesheetHash Integrity hash of the stylesheet.
  */
 function loadStylesheet(stylesheet, stylesheetHash) {
   const documentStylesheets = Array.from(document.querySelectorAll("link")).map((href) => href.href);
+
   if (
     stylesheet &&
     !documentStylesheets.includes(stylesheet) &&
@@ -68,9 +69,9 @@ function loadStylesheet(stylesheet, stylesheetHash) {
 
 /**
  * Get a TileLayer with an OSM source.
- * @param {*} attributions Attributions for the OSM source. Takes HTML code.
- * @param {*} url URL to source the OSM from.
- * @returns TileLayer with an OSM source.
+ * @param {import("ol/source/Source").AttributionLike | undefined} attributions Attributions for the OSM source. Takes HTML code.
+ * @param {string | undefined} url URL to source the OSM from.
+ * @returns A TileLayer with an OSM source.
  */
 function getTilelayer(attributions, url) {
   return new TileLayer({
@@ -83,13 +84,46 @@ function getTilelayer(attributions, url) {
 }
 
 /**
- * Get CenterControl.
- * @param {*} button Button element to use in CenterControl.
- * @param {*} element Element to use in CenterControl.
- * @param {*} center Center to use in CenterControl.
- * @returns CenterControl.
+ * Get Map and apply styling.
+ * @param {string | HTMLElement | undefined} target The target of the map.
+ * @param {string | undefined} height The height of the map element.
+ * @param {string | undefined} width The width of the map element.
+ * @param {import("ol/coordinate").Coordinate | undefined} center The center of the map.
+ * @param {number | undefined} maxZoom The maximum zoom of the map.
+ * @param {number | undefined} minZoom The minimum zoom of the map.
+ * @param {number | undefined} zoom The default zoom of the map.
+ * @param {BaseLayer[] | Collection<BaseLayer> | LayerGroup | undefined} layers The layers of the map.
+ * @returns A Map.
  */
-function getCenterControl(button, element, center) {
+function getStyledMap(target, height, width, center, maxZoom, minZoom, zoom, layers) {
+  target.style.height = height ? height : width;
+  target.style.width = width ? width : height;
+
+  const view = new View({
+    center,
+    maxZoom,
+    minZoom,
+    zoom,
+  });
+
+  return new Map({
+    layers,
+    target,
+    view,
+  });
+}
+
+/**
+ * Get CenterControl and apply styling.
+ * @param {HTMLElement} button Button element to use in CenterControl.
+ * @param {HTMLElement} element Element to use in CenterControl.
+ * @param {import("ol/coordinate").Coordinate} center Center to use in CenterControl.
+ * @returns A CenterControl.
+ */
+function getStyledCenterControl(button, element, center) {
+  button.style.display = "block";
+  element.style.display = "block";
+
   return new CenterControl({
     button,
     center,
@@ -98,12 +132,18 @@ function getCenterControl(button, element, center) {
 }
 
 /**
- * Get Overlay with specific properties that are suitable for point icons.
- * @param {*} element Element containing the icon.
- * @param {*} position Position of the new Overlay.
- * @returns Overlay with specific properties that are suitable for point icons.
+ * Get Overlay with specific properties that are suitable for point icons and apply styling.
+ * @param {string} iconSize Size of the icon.
+ * @param {HTMLElement | undefined} element Element containing the icon.
+ * @param {import("ol/coordinate").Coordinate | undefined} position Position of the new Overlay.
+ * @returns An Overlay with specific properties that are suitable for point icons.
  */
-function getIconOverlay(element, position) {
+function getStyledIconOverlay(iconSize, element, position) {
+  const length = iconSize ? iconSize : "64px";
+  element.style.height = length;
+  element.style.width = length;
+  element.style.display = "block";
+
   return new Overlay({
     element,
     position,
@@ -113,18 +153,23 @@ function getIconOverlay(element, position) {
 }
 
 /**
- * Get Overlay with specific properties that are suitable for popups.
- * @param {*} element Element containing text for the popup.
- * @param {*} offset Offset to move the Overlay.
- * @returns Overlay with specific properties that are suitable for popups.
+ * Get Overlay with specific properties that are suitable for popups and apply styling.
+ * @param {HTMLElement | undefined} element Element containing text for the popup.
+ * @param {number[] | undefined} offset Offset to move the Overlay.
+ * @returns An Overlay with specific properties that are suitable for popups.
  */
-function getPopupOverlay(element, offset) {
-  return new Overlay({
+function getStyledPopupOverlay(element, offset) {
+  element.style.display = "block";
+
+  const overlay = new Overlay({
     element,
     offset,
     positioning: "bottom-center",
     stopEvent: false,
   });
+  overlay.setPosition(undefined);
+
+  return overlay;
 }
 
 window.olSp = (config) => {
@@ -152,7 +197,6 @@ window.olSp = (config) => {
     iconSize,
   } = config;
 
-  // Load stylesheet
   loadStylesheet(stylesheet, stylesheetHash);
 
   // Initialize tileLayer
@@ -164,29 +208,17 @@ window.olSp = (config) => {
       : "";
   const tileLayer = getTilelayer([customAttribution + ATTRIBUTION], `${tileBaseURL}/{z}/{x}/{y}.png`);
 
-  // Initialize mapElement
-  const mapElement = document.getElementById(mapId);
-  mapElement.style.height = height ? height : width;
-  mapElement.style.width = width ? width : height;
-
   // Initialize map
-  const view = new View({
-    center: fromLonLat([centerX, centerY]),
-    maxZoom,
-    minZoom,
-    zoom,
-  });
-  const map = new Map({
-    layers: [tileLayer],
-    target: mapElement,
-    view,
-  });
+  const mapElement = document.getElementById(mapId);
+  const map = getStyledMap(mapElement, height, width, fromLonLat([centerX, centerY]), maxZoom, minZoom, zoom, [
+    tileLayer,
+  ]);
 
   // Add CenterControl element
   const centerControlButtonElement = document.getElementById(centerControlButtonId);
   const centerControlElement = document.getElementById(centerControlId);
   if (centerControlButtonElement && centerControlElement) {
-    const centerControl = getCenterControl(
+    const centerControl = getStyledCenterControl(
       centerControlButtonElement,
       centerControlElement,
       fromLonLat([centerX, centerY]),
@@ -194,33 +226,24 @@ window.olSp = (config) => {
     map.addControl(centerControl);
   }
 
-  // Initialize iconElement
+  // Initialize iconOverlay and add to map
   const iconElement = document.getElementById(iconId);
   if (!iconElement) {
     return;
   }
-  iconElement.style.height = iconSize;
-  iconElement.style.width = iconSize;
-  iconElement.style.display = "block";
-
-  // Initialize iconOverlay and add to map
-  const iconOverlay = getIconOverlay(iconElement, fromLonLat([pointX, pointY]));
+  const iconOverlay = getStyledIconOverlay(iconSize, iconElement, fromLonLat([pointX, pointY]));
   map.addOverlay(iconOverlay);
 
-  // Initialize popupElement
+  // Initialize popupOverlay and add to map
   const popupElement = document.getElementById(popupId);
   if (!popupElement.innerHTML.trim()) {
     return;
   }
-  popupElement.style.display = "block";
-
-  // Initialize popupOverlay and add to map
   const popupOffsetY = -1.2 * parseInt(iconSize);
-  const popupOverlay = getPopupOverlay(popupElement, [0, popupOffsetY]);
-  popupOverlay.setPosition(undefined);
+  const popupOverlay = getStyledPopupOverlay(popupElement, [0, popupOffsetY]);
   map.addOverlay(popupOverlay);
 
-  // Add event listeners
+  // Add event listeners to iconElement and map
   iconElement.addEventListener("click", (event) => {
     event.stopPropagation();
     popupOverlay.setPosition(iconOverlay.getPosition());
