@@ -100,8 +100,10 @@ function handleCenterControl(button, element, map, center) {
   //       is compatible with our CSS for ol-sp-center-control's top using em
   map.on("postrender", () => {
     const fontSize = window.getComputedStyle(button).fontSize;
-    button.style.fontSize = "inherit";
     element.style.fontSize = fontSize;
+    button.style.fontSize = "inherit";
+    element.style.display = "block";
+    button.style.display = "block";
   });
 }
 
