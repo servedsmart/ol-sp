@@ -83,27 +83,17 @@ function getTilelayer(attributions, url) {
 }
 
 /**
- * Add a CenterControl to the target map.
+ * Get CenterControl.
  * @param {*} button Button element to use in CenterControl.
  * @param {*} element Element to use in CenterControl.
- * @param {*} map Target map.
  * @param {*} center Center to use in CenterControl.
+ * @returns CenterControl.
  */
-function handleCenterControl(button, element, map, center) {
-  const centerControl = new CenterControl({
+function getCenterControl(button, element, center) {
+  return new CenterControl({
     button,
     center,
     element,
-  });
-  map.addControl(centerControl);
-  // NOTE: This is necessary to ensure that a dynamic style applied via '.ol-touch .ol-control button'
-  //       is compatible with our CSS for ol-sp-center-control's top using em
-  map.on("postrender", () => {
-    const fontSize = window.getComputedStyle(button).fontSize;
-    element.style.fontSize = fontSize;
-    button.style.fontSize = "inherit";
-    element.style.display = "block";
-    button.style.display = "block";
   });
 }
 
@@ -196,7 +186,12 @@ window.olSp = (config) => {
   const centerControlButtonElement = document.getElementById(centerControlButtonId);
   const centerControlElement = document.getElementById(centerControlId);
   if (centerControlButtonElement && centerControlElement) {
-    handleCenterControl(centerControlButtonElement, centerControlElement, map, fromLonLat([centerX, centerY]));
+    const centerControl = getCenterControl(
+      centerControlButtonElement,
+      centerControlElement,
+      fromLonLat([centerX, centerY]),
+    );
+    map.addControl(centerControl);
   }
 
   // Initialize iconElement

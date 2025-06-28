@@ -23,7 +23,7 @@
 }
 
 .ol-sp-center-control {
-  top: calc(0.5rem * 2 + 1.375em * 2);
+  bottom: 0.5rem;
   left: 0.5rem;
 }
 
