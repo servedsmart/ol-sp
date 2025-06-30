@@ -40,11 +40,11 @@ class CenterControl extends Control {
     this.element.title = "Center";
     this.center = center;
     button.addEventListener("click", () => {
-      this.handlePan();
+      this.setCenter();
     });
   }
 
-  handlePan() {
+  setCenter() {
     this.getMap().getView().setCenter(this.center);
   }
 }
