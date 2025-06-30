@@ -77,7 +77,7 @@ function loadStylesheet(stylesheet, stylesheetHash) {
  * @param {string | undefined} url URL to source the `OSM` from.
  * @returns {TileLayer<OSM>} A `TileLayer` with an `OSM` source from specified parameters.
  */
-function getTilelayer(attributions, url) {
+function getTileLayer(attributions, url) {
   return new TileLayer({
     source: new OSM({
       attributions,
@@ -233,7 +233,7 @@ window.olSp = (config) => {
         `<a href="${extraCopyrightURL}" target="_blank">${extraCopyrightName}</a> ` +
         "contributors."
       : "";
-  const tileLayer = getTilelayer([customAttribution + ATTRIBUTION], `${tileBaseURL}/{z}/{x}/{y}.png`);
+  const tileLayer = getTileLayer([customAttribution + ATTRIBUTION], `${tileBaseURL}/{z}/{x}/{y}.png`);
 
   // Initialize map
   const mapElement = document.getElementById(mapId);
