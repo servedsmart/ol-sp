@@ -10,12 +10,12 @@
 
 import "./style.css";
 
-import { fromLonLat } from "ol/proj";
 import Control from "ol/control/Control";
-import Map from "ol/Map.js";
-import OSM, { ATTRIBUTION } from "ol/source/OSM.js";
-import Overlay from "ol/Overlay.js";
 import TileLayer from "ol/layer/Tile.js";
+import Map from "ol/Map.js";
+import Overlay from "ol/Overlay.js";
+import { fromLonLat } from "ol/proj";
+import OSM, { ATTRIBUTION } from "ol/source/OSM.js";
 import View from "ol/View.js";
 
 /**
