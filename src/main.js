@@ -179,49 +179,49 @@ function getStyledPopupOverlay(element, offset) {
 /**
  *
  * @param {Object} config Configuration `Object`.
- * @param {string} config.mapId The id of the map element.
- * @param {string | undefined} config.centerControlId The id of the `CenterControl` element.
- * @param {string | undefined} config.centerControlButtonId The id of the `CenterControl` button element.
- * @param {string | undefined} config.iconId The id of the icon element.
- * @param {string | undefined} config.popupId The id of the popup element.
- * @param {string | undefined} config.stylesheet The stylesheet to load.
- * @param {string | undefined} config.stylesheetHash The hash of the stylesheet to load.
- * @param {string | undefined} config.extraCopyrightURL The URL for an extra copyright attribution.
- * @param {string | undefined} config.extraCopyrightName The name of the extra copyright attribution.
- * @param {string} config.tileBaseURL The URL for the OSM tile server.
- * @param {string} config.height The height of the map element.
- * @param {string} config.width The width of the map element.
- * @param {number} config.centerX The X coordinate (longitude) for the center of the map.
- * @param {number} config.centerY The Y coordinate (latitude) for the center of the map.
- * @param {number} config.zoom The default zoom level. Valid ranges are `0-20`. See https://wiki.openstreetmap.org/wiki/Zoom_levels.
- * @param {number} config.minZoom The minimum zoom level. Valid ranges are `0-20`. See https://wiki.openstreetmap.org/wiki/Zoom_levels.
- * @param {number} config.maxZoom The maximum zoom level. Valid ranges are `0-20`. See https://wiki.openstreetmap.org/wiki/Zoom_levels.
- * @param {number | undefined} config.pointX The X coordinate (longitude) for the position of the point.
- * @param {number | undefined} config.pointY The Y coordinate (latitude) for the position of the point.
- * @param {string | undefined} config.iconSize The size of the icon element.
+ * @param {string | undefined} [config.mapId = "ol-sp-map"] The id of the map element.
+ * @param {string | undefined} [config.centerControlId = "ol-sp-center-control"] The id of the `CenterControl` element.
+ * @param {string | undefined} [config.centerControlButtonId = "ol-sp-center-control-button"] The id of the `CenterControl` button element.
+ * @param {string | undefined} [config.iconId = "ol-sp-icon"] The id of the icon element.
+ * @param {string | undefined} [config.popupId = "ol-sp-popup"] The id of the popup element.
+ * @param {string | undefined} [config.stylesheet = "ol-sp.min.css"] The stylesheet to load.
+ * @param {string | undefined} [config.stylesheetHash] The hash of the stylesheet to load.
+ * @param {string | undefined} [config.extraCopyrightURL] The URL for an extra copyright attribution.
+ * @param {string | undefined} [config.extraCopyrightName] The name of the extra copyright attribution.
+ * @param {string | undefined} [config.tileBaseURL = "https://tile.openstreetmap.org"] The URL for the OSM tile server.
+ * @param {string | undefined} [config.height = "100%"] The height of the map element.
+ * @param {string | undefined} [config.width = "100%"] The width of the map element.
+ * @param {number | undefined} [config.centerX = 0] The X coordinate (longitude) for the center of the `Map`.
+ * @param {number | undefined} [config.centerY = 0] The Y coordinate (latitude) for the center of the `Map`.
+ * @param {number | undefined} [config.zoom = 0] The default zoom level. Valid ranges are `0-20`. See https://wiki.openstreetmap.org/wiki/Zoom_levels.
+ * @param {number | undefined} [config.minZoom = 0] The minimum zoom level. Valid ranges are `0-20`. See https://wiki.openstreetmap.org/wiki/Zoom_levels.
+ * @param {number | undefined} [config.maxZoom = 20] The maximum zoom level. Valid ranges are `0-20`. See https://wiki.openstreetmap.org/wiki/Zoom_levels.
+ * @param {number | undefined} [config.pointX = 0] The X coordinate (longitude) for the position of the point.
+ * @param {number | undefined} [config.pointY = 0] The Y coordinate (latitude) for the position of the point.
+ * @param {string | undefined} [config.iconSize = "64px"] The size of the icon element.
  */
 window.olSp = (config) => {
   const {
-    mapId,
-    centerControlId,
-    centerControlButtonId,
-    iconId,
-    popupId,
-    stylesheet,
+    mapId = "ol-sp-map",
+    centerControlId = "ol-sp-center-control",
+    centerControlButtonId = "ol-sp-center-control-button",
+    iconId = "ol-sp-icon",
+    popupId = "ol-sp-popup",
+    stylesheet = "ol-sp.min.css",
     stylesheetHash,
     extraCopyrightURL,
     extraCopyrightName,
-    tileBaseURL,
-    height,
-    width,
-    centerX,
-    centerY,
-    zoom,
-    minZoom,
-    maxZoom,
-    pointX,
-    pointY,
-    iconSize,
+    tileBaseURL = "https://tile.openstreetmap.org",
+    height = "100%",
+    width = "100%",
+    centerX = 0,
+    centerY = 0,
+    zoom = 0,
+    minZoom = 0,
+    maxZoom = 20,
+    pointX = 0,
+    pointY = 0,
+    iconSize = "64px",
   } = config;
 
   loadStylesheet(stylesheet, stylesheetHash);
