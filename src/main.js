@@ -50,9 +50,9 @@ class CenterControl extends Control {
 }
 
 /**
- * Add a stylesheet if it is not part of the documents `styleSheets`.
- * @param {string} href href to the stylesheet to add.
- * @param {string | undefined} hash Integrity hash of the stylesheet.
+ * Add a style sheet if it is not part of the documents `styleSheets`.
+ * @param {string} href href to the style sheet to add.
+ * @param {string | undefined} hash Integrity hash of the style sheet.
  */
 function addStyleSheet(href, hash) {
   const documentStyleSheets = Array.from(document.styleSheets);
@@ -182,7 +182,7 @@ function getStyledPopupOverlay(element, offset) {
  * @param {string | undefined} [config.centerControlButtonId = "ol-sp-center-control-button"] The id of the `CenterControl` button element.
  * @param {string | undefined} [config.iconId = "ol-sp-icon"] The id of the icon element.
  * @param {string | undefined} [config.popupId = "ol-sp-popup"] The id of the popup element.
- * @param {string | undefined} [config.stylesheetHref = "ol-sp.min.css"] The href of the stylesheet to load.
+ * @param {string | undefined} [config.styleSheetHref = "ol-sp.min.css"] The href of the stylesheet to load.
  * @param {string | undefined} [config.styleSheetHash] The hash of the stylesheet to load.
  * @param {string | undefined} [config.extraCopyrightURL] The URL for an extra copyright attribution.
  * @param {string | undefined} [config.extraCopyrightName] The name of the extra copyright attribution.
