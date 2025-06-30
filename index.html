@@ -34,15 +34,15 @@
   <body>
     <div class="ol-sp-map-container-custom">
       <!-- Class name ol-sp-map is required for provided CSS to work-->
-      <div id="ol-sp-map-0" class="ol-sp-map"></div>
+      <div id="ol-sp-map" class="ol-sp-map"></div>
     </div>
 
     <div
-      id="ol-sp-center-control-0"
+      id="ol-sp-center-control"
       class="ol-sp-center-control ol-unselectable ol-control"
     >
       <button
-        id="ol-sp-center-control-button-0"
+        id="ol-sp-center-control-button"
         class="ol-sp-center-control-button"
       >
         C
@@ -51,42 +51,43 @@
 
     <!-- location-dot.svg: Class name ol-sp-icon is required for provided CSS to work-->
     <img
-      id="ol-sp-icon-0"
+      id="ol-sp-icon"
       class="ol-sp-icon"
       src="src/assets/icons/location-dot.svg"
       draggable="false"
-      alt="The Statue of Liberty"
+      alt="Null Island"
     >
 
     <!-- Class name ol-sp-popup is required for provided CSS to work-->
-    <div id="ol-sp-popup-0" class="ol-sp-popup">The Statue of Liberty</div>
+    <div id="ol-sp-popup" class="ol-sp-popup">Null Island</div>
 
     <!-- src could be: ol-sp.min.esm.js -->
     <script defer type="module" src="src/main.js"></script>
 
-    <!-- src could be: ol-sp.min.css -->
+    <!-- src could be: config.js -->
+    <!-- data-style-sheet-href could be: ol-sp.min.css -->
     <script
       defer
       src="src/config.js"
-      data-map-id="ol-sp-map-0"
-      data-center-control-id="ol-sp-center-control-0"
-      data-center-control-button-id="ol-sp-center-control-button-0"
-      data-icon-id="ol-sp-icon-0"
-      data-popup-id="ol-sp-popup-0"
-      data-style-sheet-href="style.css"
-      data-style-sheet-hash=""
-      data-extra-copyright-url="https://example.com/copyright"
-      data-extra-copyright-name="Example"
+      data-map-id="ol-sp-map"
+      data-center-control-id="ol-sp-center-control"
+      data-center-control-button-id="ol-sp-center-control-button"
+      data-icon-id="ol-sp-icon"
+      data-popup-id="ol-sp-popup"
+      data-style-sheet-href="src/style.css"
+      data-style-sheet-hash
+      data-extra-copyright-url
+      data-extra-copyright-name
       data-tile-base-url="https://tile.openstreetmap.org"
       data-height="100%"
       data-width="100%"
-      data-center-x="-74.045301"
-      data-center-y="40.690136"
-      data-zoom="15"
-      data-min-zoom="5"
+      data-center-x="0"
+      data-center-y="0"
+      data-zoom="0"
+      data-min-zoom="0"
       data-max-zoom="20"
-      data-point-x="-74.044512"
-      data-point-y="40.689272"
+      data-point-x="0"
+      data-point-y="0"
       data-icon-size="64px"
     ></script>
   </body>
