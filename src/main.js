@@ -50,25 +50,23 @@ class CenterControl extends Control {
 }
 
 /**
- * Load a stylesheet and make sure it is not loaded twice.
- * @param {string} stylesheet href to the stylesheet to add.
- * @param {string | undefined} stylesheetHash Integrity hash of the stylesheet.
+ * Add a stylesheet if it is not part of the documents `styleSheets`.
+ * @param {string} href href to the stylesheet to add.
+ * @param {string | undefined} hash Integrity hash of the stylesheet.
  */
-function loadStylesheet(stylesheet, stylesheetHash) {
-  const documentStylesheets = Array.from(document.querySelectorAll("link")).map((href) => href.href);
-
-  if (
-    stylesheet &&
-    !documentStylesheets.includes(stylesheet) &&
-    !documentStylesheets.includes(window.location.origin + stylesheet) &&
-    !documentStylesheets.includes(window.location.origin + "/" + stylesheet)
-  ) {
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = stylesheet;
-    stylesheetHash && (link.integrity = stylesheetHash);
-    document.head.appendChild(link);
+function addStyleSheet(href, hash) {
+  const documentStyleSheets = Array.from(document.styleSheets);
+  const hrefs = [href, new URL(href, window.location.origin).toString()];
+  if (!href || documentStyleSheets.some((styleSheet) => hrefs.includes(styleSheet.href))) {
+    return;
   }
+
+  const link = Object.assign(document.createElement("link"), {
+    rel: "stylesheet",
+    href,
+  });
+  hash && (link.integrity = hash);
+  document.head.appendChild(link);
 }
 
 /**
@@ -184,8 +182,8 @@ function getStyledPopupOverlay(element, offset) {
  * @param {string | undefined} [config.centerControlButtonId = "ol-sp-center-control-button"] The id of the `CenterControl` button element.
  * @param {string | undefined} [config.iconId = "ol-sp-icon"] The id of the icon element.
  * @param {string | undefined} [config.popupId = "ol-sp-popup"] The id of the popup element.
- * @param {string | undefined} [config.stylesheet = "ol-sp.min.css"] The stylesheet to load.
- * @param {string | undefined} [config.stylesheetHash] The hash of the stylesheet to load.
+ * @param {string | undefined} [config.stylesheetHref = "ol-sp.min.css"] The href of the stylesheet to load.
+ * @param {string | undefined} [config.styleSheetHash] The hash of the stylesheet to load.
  * @param {string | undefined} [config.extraCopyrightURL] The URL for an extra copyright attribution.
  * @param {string | undefined} [config.extraCopyrightName] The name of the extra copyright attribution.
  * @param {string | undefined} [config.tileBaseURL = "https://tile.openstreetmap.org"] The URL for the OSM tile server.
@@ -207,8 +205,8 @@ window.olSp = (config) => {
     centerControlButtonId = "ol-sp-center-control-button",
     iconId = "ol-sp-icon",
     popupId = "ol-sp-popup",
-    stylesheet = "ol-sp.min.css",
-    stylesheetHash,
+    styleSheetHref = "ol-sp.min.css",
+    styleSheetHash,
     extraCopyrightURL,
     extraCopyrightName,
     tileBaseURL = "https://tile.openstreetmap.org",
@@ -224,7 +222,7 @@ window.olSp = (config) => {
     iconSize = "64px",
   } = config;
 
-  loadStylesheet(stylesheet, stylesheetHash);
+  addStyleSheet(styleSheetHref, styleSheetHash);
 
   // Initialize tileLayer
   const customAttribution =
