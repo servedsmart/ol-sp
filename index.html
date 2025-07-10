@@ -15,15 +15,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Using OpenLayers with Vite</title>
     <style>
-      .ol-sp-map-container-custom {
-        position: relative;
-        width: 100vw;
-        height: 100vh;
-      }
-      .ol-sp-map {
-        position: relative;
-        height: 100%;
-        max-width: 100%;
+      .ol-sp-map-container {
+        height: 100vh !important;
+        max-height: 100vh !important;
       }
       html,
       body {
@@ -32,9 +26,25 @@
     </style>
   </head>
   <body>
-    <div class="ol-sp-map-container-custom">
-      <!-- Class name ol-sp-map is required for provided CSS to work-->
-      <div id="ol-sp-map" class="ol-sp-map"></div>
+    <!-- Class name is required for provided CSS to work-->
+    <div class="ol-sp-map-container">
+      <!-- Class name is required for provided CSS to work-->
+      <div class="ol-sp-map-overlay-container">
+        <!-- Class name is required for provided CSS to work-->
+        <div id="ol-sp-map" class="ol-sp-map"></div>
+        <!-- Class name is required for provided CSS to work-->
+        <div id="ol-sp-instructions" class="ol-sp-instructions">
+          <div
+            id="ol-sp-instructions-content"
+            class="ol-sp-instructions-content"
+          >
+            <p>
+              Use <span>two fingers</span> or hold <span>Ctrl/Cmd</span> to
+              zoom/pan
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div
@@ -49,7 +59,7 @@
       </button>
     </div>
 
-    <!-- location-dot.svg: Class name ol-sp-icon is required for provided CSS to work-->
+    <!-- location-dot.svg: Class name is required for provided CSS to work-->
     <img
       id="ol-sp-icon"
       class="ol-sp-icon"
@@ -58,7 +68,7 @@
       alt="Null Island"
     >
 
-    <!-- Class name ol-sp-popup is required for provided CSS to work-->
+    <!-- Class name is required for provided CSS to work-->
     <div id="ol-sp-popup" class="ol-sp-popup">Null Island</div>
 
     <!-- src could be: ol-sp.min.esm.js -->
@@ -70,6 +80,8 @@
       defer
       src="src/config.js"
       data-map-id="ol-sp-map"
+      data-instructions-id="ol-sp-instructions"
+      data-instructions-content-id="ol-sp-instructions-content"
       data-center-control-id="ol-sp-center-control"
       data-center-control-button-id="ol-sp-center-control-button"
       data-icon-id="ol-sp-icon"

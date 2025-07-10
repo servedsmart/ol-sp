@@ -11,6 +11,10 @@
 import "./style.css";
 
 import Control from "ol/control/Control";
+import { platformModifierKeyOnly } from "ol/events/condition";
+import { defaults } from "ol/interaction/defaults.js";
+import DragPan from "ol/interaction/DragPan.js";
+import MouseWheelZoom from "ol/interaction/MouseWheelZoom.js";
 import TileLayer from "ol/layer/Tile.js";
 import Map from "ol/Map.js";
 import Overlay from "ol/Overlay.js";
@@ -95,12 +99,24 @@ function getTileLayer(attributions, url) {
  * @param {number | undefined} minZoom The minimum zoom of the `View`.
  * @param {number | undefined} zoom The default zoom of the `View`.
  * @param {BaseLayer[] | Collection<BaseLayer> | LayerGroup | undefined} layers The layers of the `Map`.
- * @returns {Map} A `Map` with a `View` from specified parameters.
+ * @returns {Map} A `Map` with a `View` from specified parameters and restricted interactions.
  */
 function getStyledMap(target, height, width, center, maxZoom, minZoom, zoom, layers) {
   target.style.height = height ? height : width;
   target.style.width = width ? width : height;
+  target.parentElement.style.height = height ? height : width;
+  target.parentElement.style.width = width ? width : height;
 
+  const interactions = defaults({ dragPan: false, mouseWheelZoom: false }).extend([
+    new DragPan({
+      condition: function (event) {
+        return this.getPointerCount() === 2 || platformModifierKeyOnly(event);
+      },
+    }),
+    new MouseWheelZoom({
+      condition: platformModifierKeyOnly,
+    }),
+  ]);
   const view = new View({
     center,
     maxZoom,
@@ -109,9 +125,117 @@ function getStyledMap(target, height, width, center, maxZoom, minZoom, zoom, lay
   });
 
   return new Map({
+    interactions,
     layers,
     target,
     view,
+  });
+}
+
+/**
+ * Show instructions for map usage.
+ * @param {Map} map The target map.
+ * @param {HTMLElement} element The element that contains the instructions.
+ * @param {HTMLElement} contentElement The element that contains the instructions content.
+ * @param {number} duration The duration to show the instructions for.
+ */
+function showInstructions(map, element, contentElement, duration) {
+  // Initialize showTimeout and hideTimeout
+  let showTimeout = null;
+  let hideTimeout = null;
+
+  /**
+   * Clear `showTimeout` and `hideTimeout`.
+   */
+  function clearTimeouts() {
+    if (showTimeout) {
+      clearTimeout(showTimeout);
+    }
+    if (hideTimeout) {
+      clearTimeout(hideTimeout);
+    }
+  }
+
+  /**
+   * Hide instructions. This also clears timeouts.
+   */
+  function hideInstructions() {
+    clearTimeouts();
+    element.style.display = "none";
+    contentElement.style.display = "none";
+  }
+
+  /**
+   * Show instructions and hide after a specific duration.
+   */
+  function handleInstructions(condition) {
+    if (!condition) {
+      return;
+    }
+    clearTimeouts();
+    showTimeout = setTimeout(() => {
+      element.style.display = "flex";
+      contentElement.style.display = "flex";
+      showTimeout = null;
+    }, 100);
+
+    hideTimeout = setTimeout(() => {
+      hideInstructions();
+      hideTimeout = null;
+    }, duration);
+    mapGestured = false;
+    startPointer = { x: 0, y: 0 };
+  }
+
+  let mapGestured = false;
+  let startPointer = { x: 0, y: 0 };
+
+  // Add event listeners to mapCanvas, mapViewport and map
+  const mapViewport = map.getViewport();
+  const mapCanvas = mapViewport.querySelector("canvas");
+  mapCanvas.addEventListener("pointerdown", (event) => {
+    mapGestured = false;
+    startPointer = { x: event.clientX, y: event.clientY };
+  });
+  mapCanvas.addEventListener("pointermove", (event) => {
+    const delta = {
+      x: event.clientX - startPointer.x,
+      y: event.clientY - startPointer.y,
+    };
+    if (Math.abs(delta.x) > 5 || Math.abs(delta.y) > 5) {
+      mapGestured = true;
+    }
+  });
+  mapCanvas.addEventListener(
+    "touchmove",
+    (event) => {
+      if (event.touches.length > 1) {
+        mapGestured = true;
+      }
+    },
+    { passive: true },
+  );
+  mapCanvas.addEventListener("pointerup", () => {
+    handleInstructions(mapGestured);
+  });
+  mapCanvas.addEventListener("touchend", () => {
+    handleInstructions(mapGestured);
+  });
+  mapViewport.addEventListener(
+    "wheel",
+    (event) => {
+      handleInstructions(Math.abs(event.deltaY) > 0);
+    },
+    { passive: true },
+  );
+  map.on("movestart", () => {
+    hideInstructions();
+  });
+  map.on("moveend", () => {
+    hideInstructions();
+  });
+  map.getView().on("change:resolution", () => {
+    hideInstructions();
   });
 }
 
@@ -178,6 +302,8 @@ function getStyledPopupOverlay(element, offset) {
  *
  * @param {Object} config Configuration `Object`.
  * @param {string | undefined} [config.mapId = "ol-sp-map"] The id of the map element.
+ * @param {string | undefined} [config.instructionsId = "ol-sp-instructions"] The id of the instructions element.
+ * @param {string | undefined} [config.instructionsContentId = "ol-sp-instructions-content"] The id of the instructions content element.
  * @param {string | undefined} [config.centerControlId = "ol-sp-center-control"] The id of the `CenterControl` element.
  * @param {string | undefined} [config.centerControlButtonId = "ol-sp-center-control-button"] The id of the `CenterControl` button element.
  * @param {string | undefined} [config.iconId = "ol-sp-icon"] The id of the icon element.
@@ -201,6 +327,8 @@ function getStyledPopupOverlay(element, offset) {
 window.olSp = (config) => {
   const {
     mapId = "ol-sp-map",
+    instructionsId = "ol-sp-instructions",
+    instructionsContentId = "ol-sp-instructions-content",
     centerControlId = "ol-sp-center-control",
     centerControlButtonId = "ol-sp-center-control-button",
     iconId = "ol-sp-icon",
@@ -239,6 +367,15 @@ window.olSp = (config) => {
     tileLayer,
   ]);
 
+  // Initialize instructionsElement and add event listeners to map
+  const instructionsElement = document.getElementById(instructionsId);
+  const instructionsContentElement = document.getElementById(instructionsContentId);
+  if (instructionsElement && instructionsContentElement) {
+    map.once("postrender", () => {
+      showInstructions(map, instructionsElement, instructionsContentElement, 3000);
+    });
+  }
+
   // Add CenterControl element
   const centerControlButtonElement = document.getElementById(centerControlButtonId);
   const centerControlElement = document.getElementById(centerControlId);
@@ -268,7 +405,7 @@ window.olSp = (config) => {
   const popupOverlay = getStyledPopupOverlay(popupElement, [0, popupOffsetY]);
   map.addOverlay(popupOverlay);
 
-  // Add event listeners to iconElement and map
+  // Add event listeners for popupOverlay to iconElement and map
   iconElement.addEventListener("click", (event) => {
     event.stopPropagation();
     popupOverlay.setPosition(iconOverlay.getPosition());
