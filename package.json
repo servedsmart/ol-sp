@@ -1,7 +1,7 @@
 {
   "name": "ol-sp",
   "description": "A basic map using OpenLayers to generate a point with an icon and a popup. Not production ready.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Leopold Johannes Meinel",
     "email": "leo@meinel.dev"
